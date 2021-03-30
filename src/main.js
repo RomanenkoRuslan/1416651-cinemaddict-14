@@ -22,18 +22,22 @@ createElement(main, filmListTemplate(), 'beforeend');
 const filmsListContainer = document.querySelector('.films-list__container--all-movies');
 const filmsListContainerTopRated = document.querySelector('.films-list__container--top-rated');
 const filmsListContainerMostCommented = document.querySelector('.films-list__container--most-commented');
+
+//Все фильмы
 const filmsList = document.querySelector('.films-list');
 createElement(filmsListContainer, filmTemplate(), 'beforeend');
 createElement(filmsList, showMoreTemplate(), 'beforeend');
 
+const COUNTFILMSTOPRATED = 2;
+const COUNTFILMSMOSTCOMMENTED = 2;
 
-const countfilmsTopRated = 2;
-const countfilmsMostCommented = 2;
 
-for (let i = 1; i <= countfilmsTopRated; i++) {
+//Отрисовка топ рейтинга
+for (let i = 1; i <= COUNTFILMSTOPRATED; i++) {
   createElement(filmsListContainerTopRated, filmTemplate(), 'beforeend');
 }
 
-for (let i = 1; i <= countfilmsMostCommented; i++) {
+//Отрисовка самый комментируемый
+for (let i = 1; i <= COUNTFILMSMOSTCOMMENTED; i++) {
   createElement(filmsListContainerMostCommented, filmTemplate(), 'beforeend');
 }
