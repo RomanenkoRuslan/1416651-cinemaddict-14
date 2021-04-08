@@ -5,6 +5,7 @@ import {filmTemplate} from './view/film-card';
 import {filmListTemplate} from './view/films-list';
 import {showMoreTemplate} from './view/show-more';
 // import {popupTemplate} from './view/film-popup';
+import {filmsArray} from './moks/create-film.js';
 
 //функцию для отрисовки (вставки в DOM) компонент
 const createElement = (container, template, place) => {
@@ -25,12 +26,17 @@ const filmsListContainerMostCommented = document.querySelector('.films-list__con
 
 //Все фильмы
 const filmsList = document.querySelector('.films-list');
-createElement(filmsListContainer, filmTemplate(), 'beforeend');
+
+//Отрисовка всех фильмов
+for (let i = 0; i <= filmsArray.length; i++) {
+  createElement(filmsListContainer, filmTemplate(filmsArray[i]), 'beforeend');
+}
+
+//Отрисовка кнопки "Показать больше"
 createElement(filmsList, showMoreTemplate(), 'beforeend');
 
 const COUNTFILMSTOPRATED = 2;
 const COUNTFILMSMOSTCOMMENTED = 2;
-
 
 //Отрисовка топ рейтинга
 for (let i = 1; i <= COUNTFILMSTOPRATED; i++) {
@@ -41,3 +47,7 @@ for (let i = 1; i <= COUNTFILMSTOPRATED; i++) {
 for (let i = 1; i <= COUNTFILMSMOSTCOMMENTED; i++) {
   createElement(filmsListContainerMostCommented, filmTemplate(), 'beforeend');
 }
+
+// //Отрисовка попапа
+// createElement(filmsList, popupTemplate(), 'beforeend');
+export {filmsArray};
