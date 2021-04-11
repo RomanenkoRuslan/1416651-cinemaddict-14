@@ -1,5 +1,5 @@
-const filmTemplate = (filmsArray) => {
-  const {title, description, rating, genre, year, duration, comment} = filmsArray;
+const filmTemplate = (film) => {
+  const {title, description, rating, genre, year, duration, commentSum} = film;
 
   return `<article class="film-card">
   <h3 class="film-card__title">${title}</h3>
@@ -11,7 +11,7 @@ const filmTemplate = (filmsArray) => {
   </p>
   <img src="./images/posters/the-dance-of-life.jpg" alt="" class="film-card__poster">
   <p class="film-card__description">${description}</p>
-  <a class="film-card__comments">${comment} comments</a>
+  <a class="film-card__comments">${commentSum} comments</a>
   <div class="film-card__controls">
     <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist" type="button">Add to watchlist</button>
     <button class="film-card__controls-item button film-card__controls-item--mark-as-watched" type="button">Mark as watched</button>
