@@ -5,7 +5,7 @@ const mainNavigationTemplate = (films) => {
 
   //Добавляем счетчики
   for (const film of films) {
-    if (film.isHistiry) {
+    if (film.isHistory) {
       sumHistory.push(film);
     }
 

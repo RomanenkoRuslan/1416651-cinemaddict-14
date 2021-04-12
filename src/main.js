@@ -5,8 +5,8 @@ import {filmTemplate} from './view/film-card';
 import {filmListTemplate} from './view/films-list';
 import {showMoreTemplate} from './view/show-more';
 import {filmsArray} from './moks/create-film.js';
-// import {popupTemplate} from './view/film-popup';
-// import {comment} from'./view/comment.js';
+import {popupTemplate} from './view/film-popup';
+import {comment} from'./view/comment.js';
 
 //функцию для отрисовки (вставки в DOM) компонент
 const createElement = (container, template, place) => {
@@ -86,13 +86,13 @@ for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
 
 //Специально закомментирован, так как попап всплывает поверх всей страницы, что затрудняет работу над другими элементами
 
-// //Отрисовка попапа
-// createElement(filmsList, popupTemplate(filmsArray[0]), 'beforeend');
+//Отрисовка попапа
+createElement(filmsList, popupTemplate(filmsArray[0]), 'beforeend');
 
-// //Отрисовка комментарий в попапе
-// const commentsList = document.querySelector('.film-details__comments-list');
-// for (let i = 0; i < filmsArray[0].comment.length; i++) {
-//   createElement(commentsList, comment(filmsArray[0].comment[i]), 'beforeend');
-// }
+//Отрисовка комментарий в попапе
+const commentsList = document.querySelector('.film-details__comments-list');
+for (let i = 0; i < filmsArray[0].comments.length; i++) {
+  createElement(commentsList, comment(filmsArray[0].comments[i]), 'beforeend');
+}
 
 export {filmsArray, createElement};

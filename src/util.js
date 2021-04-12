@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 // Рандом число в диапазоне
 const getRandomInRange = (min, max) => {
   min = Math.ceil(min);
@@ -40,9 +42,20 @@ const getRandomItemNoRepeat = (arr) => {
 };
 
 //Возвращает boolean
-
 const getBoolean = () => {
   return Boolean(getRandomInRange(0, 1));
 };
 
-export {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean};
+//Возвращает рандом дату
+const getRandomDate = (start = new Date(2010, 12, 31), end =  new Date(), format = 'DD MMMM YYYY') => {
+  const newDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return dayjs(newDate).format(format);
+};
+
+//Возвращает рандом дату и время
+const getRandomDateTime = (start = new Date(2010, 12, 31), end =  new Date(), format = 'DD MMMM YYYY HH:mm') => {
+  const newDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+  return dayjs(newDate).format(format);
+};
+
+export {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean, getRandomDate ,getRandomDateTime};

@@ -1,4 +1,4 @@
-import {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean} from '../util.js';
+import {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean, getRandomDate} from '../util.js';
 import {commentsArray} from './create-comment.js';
 
 //Создаем фильм
@@ -10,16 +10,16 @@ const SCREENWRITERS = ['Paul Savage', 'Richard Side', 'David Seidler', 'Ira Sach
 const ACTORS = ['Alan Rickman', 'Benedict Cumberbatch', 'Benicio del Toro', 'Nicole Kidman', 'James McAvoy', 'Daniel Day-Lewis', 'Daniel Radcliffe', 'Cillian Murphy', 'Christian Bale', 'Leonardo DiCaprio', 'Monica Bellucci', 'Tim Roth', 'Marilyn Monroe', 'Ornella Muti'];
 const GENRES = ['Parodie', 'Western', 'Fairy Tale', 'Monster Stories', 'Romance', 'Tragedy'];
 const COUNTRIES = ['Russia', 'USA', 'Chine', 'Poland', 'France', 'Spain', 'Canada'];
-const MOUNTH = ['January', 'Februery', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const description = descriptionText.split('. ');
 
 const createFilm = () => {
-  const comment = commentsArray.slice(0, getRandomInRange(1, 5));
+  const comments = commentsArray.slice(0, getRandomInRange(1, 5));
+  const date = getRandomDate(); //format dd mmmm yyyy
   return {
     idFilm: getRandomInRange(1000, 5000),
     title: getRandomItem(TITLEFILMS),
     isWatch: getBoolean(),
-    isHistiry: getBoolean(),
+    isHistory: getBoolean(),
     isFavorite: getBoolean(),
     poster: 'the-man-with-the-golden-arm.jpg',
     description: getRandomItemNoRepeat(description),
@@ -31,10 +31,9 @@ const createFilm = () => {
     genre: getRandomItem(GENRES),
     ageRating: `${getRandomInRange(0, 21)}+`,
     country: getRandomItem(COUNTRIES),
-    year: `${getRandomInRange(1800, 2015)}`,
-    date: `${getRandomInRange(1, 30)} ${getRandomItem(MOUNTH)} ${getRandomInRange(1800, 2015)}`,
-    comment,
-    commentSum: comment.length,
+    date,
+    comments,
+    commentSum: comments.length,
   };
 };
 
