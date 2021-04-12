@@ -1,5 +1,6 @@
 const popupTemplate = (film) => {
   const {title, description, rating, genre, duration, date, actor, producer, screenwriter, country, ageRating, commentSum} = film;
+  const newFormatDate = date.format('DD MMMM YYYY');
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -41,7 +42,7 @@ const popupTemplate = (film) => {
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Release Date</td>
-              <td class="film-details__cell">${date}</td>
+              <td class="film-details__cell">${newFormatDate}</td>
             </tr>
             <tr class="film-details__row">
               <td class="film-details__term">Runtime</td>

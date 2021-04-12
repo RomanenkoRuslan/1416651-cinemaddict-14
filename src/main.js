@@ -87,7 +87,7 @@ for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
 //Специально закомментирован, так как попап всплывает поверх всей страницы, что затрудняет работу над другими элементами
 
 //Отрисовка попапа
-createElement(filmsList, popupTemplate(filmsArray[0]), 'beforeend');
+createElement(main, popupTemplate(filmsArray[0]), 'beforeend');
 
 //Отрисовка комментарий в попапе
 const commentsList = document.querySelector('.film-details__comments-list');

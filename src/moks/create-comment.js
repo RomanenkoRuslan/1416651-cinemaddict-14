@@ -1,4 +1,4 @@
-import {getRandomItem, getRandomInRange, getRandomDateTime} from '../util.js';
+import {getRandomItem, getRandomInRange, getRandomDate} from '../util.js';
 
 const COMMENTS = ['Booooooooooring', 'Interesting setting and a good cast','Almost two hours? Seriously?', 'Goooood', 'It`s funny'];
 const EMOJI = ['smile', 'sleeping','puke', 'angry'];
@@ -11,7 +11,7 @@ const createComment = () => {
     textComment: getRandomItem(COMMENTS),
     emoji: getRandomItem(EMOJI),
     authorComment: getRandomItem(AUTHOR),
-    dateComment: getRandomDateTime(),
+    dateComment: getRandomDate().format('DD/MMMM/YYYY HH:mm'),
   };
 };
 

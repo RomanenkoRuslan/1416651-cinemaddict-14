@@ -14,7 +14,6 @@ const description = descriptionText.split('. ');
 
 const createFilm = () => {
   const comments = commentsArray.slice(0, getRandomInRange(1, 5));
-  const date = getRandomDate(); //format dd mmmm yyyy
   return {
     idFilm: getRandomInRange(1000, 5000),
     title: getRandomItem(TITLEFILMS),
@@ -31,7 +30,7 @@ const createFilm = () => {
     genre: getRandomItem(GENRES),
     ageRating: `${getRandomInRange(0, 21)}+`,
     country: getRandomItem(COUNTRIES),
-    date,
+    date: getRandomDate(),
     comments,
     commentSum: comments.length,
   };

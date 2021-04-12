@@ -1,6 +1,6 @@
 const filmTemplate = (film) => {
   const {title, description, rating, genre, date, duration, commentSum, isWatch, isHistory, isFavorite} = film;
-  const year = date.split(' ')[2]; // format yyyy
+  const year = date.format('YYYY');
 
   //Добавляем активность кнопок основываясь на полученнных данных
   let  watchClass = '';

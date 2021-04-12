@@ -47,15 +47,9 @@ const getBoolean = () => {
 };
 
 //Возвращает рандом дату
-const getRandomDate = (start = new Date(2010, 12, 31), end =  new Date(), format = 'DD MMMM YYYY') => {
+const getRandomDate = (start = new Date(2010, 12, 31), end =  new Date()) => {
   const newDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return dayjs(newDate).format(format);
+  return dayjs(newDate);
 };
 
-//Возвращает рандом дату и время
-const getRandomDateTime = (start = new Date(2010, 12, 31), end =  new Date(), format = 'DD MMMM YYYY HH:mm') => {
-  const newDate = new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
-  return dayjs(newDate).format(format);
-};
-
-export {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean, getRandomDate ,getRandomDateTime};
+export {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean, getRandomDate};
