@@ -11,7 +11,7 @@ const createComment = () => {
     textComment: getRandomItem(COMMENTS),
     emoji: getRandomItem(EMOJI),
     authorComment: getRandomItem(AUTHOR),
-    dateComment: getRandomDate().format('DD/MMMM/YYYY HH:mm'),
+    dateComment: getRandomDate(),
   };
 };
 
