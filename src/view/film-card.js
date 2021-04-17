@@ -1,4 +1,6 @@
-const filmTemplate = (film) => {
+import {createElement} from '../util.js';
+
+const createFilmTemplate = (film) => {
   const {title, description, rating, genre, date, duration, commentSum, isWatch, isHistory, isFavorite} = film;
   const year = date.format('YYYY');
 
@@ -38,4 +40,26 @@ const filmTemplate = (film) => {
 </article>`;
 };
 
-export {filmTemplate};
+export default class Film {
+  constructor (film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return createFilmTemplate(this._film);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}
+
