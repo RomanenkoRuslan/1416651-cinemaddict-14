@@ -87,6 +87,7 @@ const cardPosters = document.querySelectorAll('.film-card__poster');
 //Создаем массив из элементов, которые открывают попап
 const elementsOpenPopup = [...cardTitles, ...cardComments, ...cardPosters];
 const body  = document.querySelector('body');
+const KEYCODEESC = 27;
 
 //Открываем попап по клику
 elementsOpenPopup.forEach((element) => {
@@ -113,8 +114,8 @@ elementsOpenPopup.forEach((element) => {
 
     //Убираем попап по ESC
     window.addEventListener('keydown', (evt) => {
-      if (evt.keyCode === 27) {
-        main.removeChild(popup);
+      if (evt.keyCode === KEYCODEESC) {
+        popup.remove();
         body.removeAttribute('class');
       }
     });
