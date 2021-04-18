@@ -1,13 +1,14 @@
 import {filmsArray} from './moks/create-film.js';
 import {renderElement, RenderPosition} from './util.js';
-import FilmListView from './view/films-list';
-import ProfileView from './view/profile';
-import ShowMoreView from './view/show-more';
-import SortView from './view/sort';
+import FilmListView from './view/films-list.js';
+import ProfileView from './view/profile.js';
+import ShowMoreView from './view/show-more.js';
+import SortView from './view/sort.js';
 import CommentView from './view/comment.js';
-import PopupView from './view/film-popup';
-import MainNavigationView from './view/main-navigation';
-import FilmView from './view/film-card';
+import PopupView from './view/film-popup.js';
+import MainNavigationView from './view/main-navigation.js';
+import FilmView from './view/film-card.js';
+import NoFilmMessage from './view/no-film-message.js';
 
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
@@ -20,6 +21,10 @@ renderElement(main, new FilmListView().getElement(), RenderPosition.BEFOREEND);
 const filmsListContainer = document.querySelector('.films-list__container--all-movies');
 const filmsListContainerTopRated = document.querySelector('.films-list__container--top-rated');
 const filmsListContainerMostCommented = document.querySelector('.films-list__container--most-commented');
+
+if (filmsArray.length === 0) {
+  renderElement(filmsListContainer, new NoFilmMessage().getElement(), RenderPosition.BEFOREEND);
+}
 
 //Все фильмы
 const filmsList = document.querySelector('.films-list');
@@ -65,8 +70,10 @@ const sortListRated = (a, b) => {
 //Сортировка по рейтингу
 const topRated = filmsArray.slice().sort(sortListRated);
 
-for (let i = 0; i < COUNTFILMSTOPRATED; i++) {
-  renderElement(filmsListContainerTopRated, new FilmView(topRated[i]).getElement(), RenderPosition.BEFOREEND);
+if (topRated.length > 0) {
+  for (let i = 0; i < COUNTFILMSTOPRATED; i++) {
+    renderElement(filmsListContainerTopRated, new FilmView(topRated[i]).getElement(), RenderPosition.BEFOREEND);
+  }
 }
 
 //Отрисовка самый комментируемый
@@ -76,8 +83,10 @@ const sortListCommented = (a, b) => {
 };
 const mostCommented = filmsArray.slice().sort(sortListCommented);
 
-for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
-  renderElement(filmsListContainerMostCommented, new FilmView(mostCommented[i]).getElement(), RenderPosition.BEFOREEND);
+if (mostCommented.length > 0) {
+  for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
+    renderElement(filmsListContainerMostCommented, new FilmView(mostCommented[i]).getElement(), RenderPosition.BEFOREEND);
+  }
 }
 
 const cardTitles = document.querySelectorAll('.film-card__title');

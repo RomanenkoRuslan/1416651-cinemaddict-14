@@ -1,9 +1,14 @@
 import {createElement} from '../util.js';
 
 const createFilmTemplate = (film) => {
-  const {title, description, rating, genre, date, duration, commentSum, isWatch, isHistory, isFavorite} = film;
-  const year = date.format('YYYY');
+  //Данные фильмом отсутвуют, прекратить выполнение при отсутствие фильмов
+  if (!film) {
+    return;
+  }
 
+  const {title, description, rating, genre, date, duration, commentSum, isWatch, isHistory, isFavorite} = film;
+
+  const year = date.format('YYYY');
   //Добавляем активность кнопок основываясь на полученнных данных
   let  watchClass = '';
   let  historyClass = '';
