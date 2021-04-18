@@ -1,4 +1,6 @@
-const mainNavigationTemplate = (films) => {
+import {createElement} from '../util.js';
+
+const createMainNavigationTemplate = (films) => {
   const sumHistory = [];
   const sumFavorite = [];
   const sumWatch = [];
@@ -33,4 +35,25 @@ const mainNavigationTemplate = (films) => {
 </nav>`;
 };
 
-export {mainNavigationTemplate};
+export default class MainNavigation {
+  constructor (films) {
+    this._films = films;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return createMainNavigationTemplate(this._films);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}

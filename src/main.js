@@ -1,26 +1,22 @@
-import {mainNavigationTemplate} from './view/main-navigation';
-import {sortTemplate} from './view/sort';
-import {profileTemplate} from './view/profile';
-import {filmTemplate} from './view/film-card';
-import {filmListTemplate} from './view/films-list';
-import {showMoreTemplate} from './view/show-more';
 import {filmsArray} from './moks/create-film.js';
-import {popupTemplate} from './view/film-popup';
-import {comment} from'./view/comment.js';
-
-//функцию для отрисовки (вставки в DOM) компонент
-const createElement = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+import {renderElement, RenderPosition} from './util.js';
+import FilmListView from './view/films-list';
+import ProfileView from './view/profile';
+import ShowMoreView from './view/show-more';
+import SortView from './view/sort';
+import CommentView from './view/comment.js';
+import PopupView from './view/film-popup';
+import MainNavigationView from './view/main-navigation';
+import FilmView from './view/film-card';
 
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
 
-createElement(header, profileTemplate(), 'beforeend');
-createElement(main, mainNavigationTemplate(filmsArray), 'beforeend');
-createElement(main, sortTemplate(), 'beforeend');
+renderElement(header, new ProfileView().getElement(), RenderPosition.BEFOREEND);
+renderElement(main, new MainNavigationView(filmsArray).getElement(), RenderPosition.BEFOREEND);
+renderElement(main, new SortView().getElement(), RenderPosition.BEFOREEND);
 
-createElement(main, filmListTemplate(), 'beforeend');
+renderElement(main, new FilmListView().getElement(), RenderPosition.BEFOREEND);
 const filmsListContainer = document.querySelector('.films-list__container--all-movies');
 const filmsListContainerTopRated = document.querySelector('.films-list__container--top-rated');
 const filmsListContainerMostCommented = document.querySelector('.films-list__container--most-commented');
@@ -30,7 +26,7 @@ const filmsList = document.querySelector('.films-list');
 const STEPRENDERFILM = 5;
 //Отрисовка всех фильмов
 for (let i = 0; i < filmsArray.slice(0, STEPRENDERFILM).length; i++) {
-  createElement(filmsListContainer, filmTemplate(filmsArray[i]), 'beforeend');
+  renderElement(filmsListContainer, new FilmView(filmsArray[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 //Отрисовка фильмов по клику
@@ -38,7 +34,7 @@ if (filmsArray.length > STEPRENDERFILM) {
   let renderedFilmCount = STEPRENDERFILM;
 
   //Отрисовка кнопки "Показать больше"
-  createElement(filmsList, showMoreTemplate(), 'beforeend');
+  renderElement(filmsList, new ShowMoreView().getElement(), RenderPosition.BEFOREEND);
   const buttonShow = document.querySelector('.films-list__show-more');
 
   buttonShow.addEventListener('click', (evt) => {
@@ -46,7 +42,7 @@ if (filmsArray.length > STEPRENDERFILM) {
     filmsArray
       .slice(renderedFilmCount, renderedFilmCount + STEPRENDERFILM)
       .forEach((element) => {
-        createElement(filmsListContainer, filmTemplate(element), 'beforeend');
+        renderElement(filmsListContainer, new FilmView(element).getElement(), RenderPosition.BEFOREEND);
       });
 
     renderedFilmCount += STEPRENDERFILM;
@@ -70,7 +66,7 @@ const sortListRated = (a, b) => {
 const topRated = filmsArray.slice().sort(sortListRated);
 
 for (let i = 0; i < COUNTFILMSTOPRATED; i++) {
-  createElement(filmsListContainerTopRated, filmTemplate(topRated[i]), 'beforeend');
+  renderElement(filmsListContainerTopRated, new FilmView(topRated[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
 //Отрисовка самый комментируемый
@@ -81,18 +77,51 @@ const sortListCommented = (a, b) => {
 const mostCommented = filmsArray.slice().sort(sortListCommented);
 
 for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
-  createElement(filmsListContainerMostCommented, filmTemplate(mostCommented[i]), 'beforeend');
+  renderElement(filmsListContainerMostCommented, new FilmView(mostCommented[i]).getElement(), RenderPosition.BEFOREEND);
 }
 
-//Специально закомментирован, так как попап всплывает поверх всей страницы, что затрудняет работу над другими элементами
+const cardTitles = document.querySelectorAll('.film-card__title');
+const cardComments = document.querySelectorAll('.film-card__comments');
+const cardPosters = document.querySelectorAll('.film-card__poster');
 
-//Отрисовка попапа
-createElement(main, popupTemplate(filmsArray[0]), 'beforeend');
+//Создаем массив из элементов, которые открывают попап
+const elementsOpenPopup = [...cardTitles, ...cardComments, ...cardPosters];
+const body  = document.querySelector('body');
+const KEYCODEESC = 27;
 
-//Отрисовка комментарий в попапе
-const commentsList = document.querySelector('.film-details__comments-list');
-for (let i = 0; i < filmsArray[0].comments.length; i++) {
-  createElement(commentsList, comment(filmsArray[0].comments[i]), 'beforeend');
-}
+//Открываем попап по клику
+elementsOpenPopup.forEach((element) => {
+  element.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    //Отрисовка попапа
+    const popup = main.appendChild(new PopupView(filmsArray[0]).getElement());
 
-export {filmsArray, createElement};
+    //Отрисовка комментарий в попапе
+    const commentsList = document.querySelector('.film-details__comments-list');
+    for (let i = 0; i < filmsArray[0].comments.length; i++) {
+      renderElement(commentsList, new CommentView(filmsArray[0].comments[i]).getElement(), RenderPosition.BEFOREEND);
+    }
+
+    body.setAttribute('class','hide-overflow');//убираем лишний скрол
+
+    const closePopupButton = document.querySelector('.film-details__close-btn');
+
+    //Убираем попап по клику
+    closePopupButton.addEventListener('click', () => {
+      main.removeChild(popup);
+      body.removeAttribute('class');
+    });
+
+    //Убираем попап по ESC
+    window.addEventListener('keydown', (evt) => {
+      if (evt.keyCode === KEYCODEESC) {
+        popup.remove();
+        body.removeAttribute('class');
+      }
+    });
+  });
+
+});
+
+
+export {filmsArray};

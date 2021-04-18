@@ -1,4 +1,6 @@
-const popupTemplate = (film) => {
+import {createElement} from '../util.js';
+
+const createPopup = (film) => {
   const {title, description, rating, genre, duration, date, actor, producer, screenwriter, country, ageRating, commentSum} = film;
   const newFormatDate = date.format('DD MMMM YYYY');
 
@@ -119,4 +121,25 @@ const popupTemplate = (film) => {
 </section>`;
 };
 
-export {popupTemplate};
+export default class Popup {
+  constructor (film) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return createPopup(this._film );
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}

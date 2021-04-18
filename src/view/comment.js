@@ -1,4 +1,6 @@
-const comment = (comment) => {
+import {createElement} from '../util.js';
+
+const createComment = (comment) => {
   const {textComment, emoji, authorComment, dateComment} = comment;
   const newDateFormat = dateComment.format('DD/MMMM/YYYY HH:mm');
 
@@ -17,4 +19,25 @@ const comment = (comment) => {
 </li>`;
 };
 
-export {comment};
+export default class Comment {
+  constructor (coments) {
+    this._coments = coments;
+    this._element = null;
+  }
+
+  getTemplate () {
+    return createComment(this._coments);
+  }
+
+  getElement () {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement () {
+    this._element = null;
+  }
+}
