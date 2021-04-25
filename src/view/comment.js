@@ -1,4 +1,4 @@
-import {createElement} from '../util.js';
+import AbstractView from './abstract.js';
 
 const createComment = (comment) => {
   const {textComment, emoji, authorComment, dateComment} = comment;
@@ -19,25 +19,13 @@ const createComment = (comment) => {
 </li>`;
 };
 
-export default class Comment {
+export default class Comment extends AbstractView {
   constructor (coments) {
+    super();
     this._coments = coments;
-    this._element = null;
   }
 
   getTemplate () {
     return createComment(this._coments);
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
   }
 }

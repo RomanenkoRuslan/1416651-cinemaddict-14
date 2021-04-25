@@ -1,4 +1,4 @@
-import {createElement} from '../util.js';
+import AbstractView from './abstract.js';
 
 const createFilmTemplate = (film) => {
   //Данные фильмом отсутвуют, прекратить выполнение при отсутствие фильмов
@@ -45,26 +45,14 @@ const createFilmTemplate = (film) => {
 </article>`;
 };
 
-export default class Film {
+export default class Film extends AbstractView {
   constructor (film) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate () {
     return createFilmTemplate(this._film);
-  }
-
-  getElement () {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement () {
-    this._element = null;
   }
 }
 

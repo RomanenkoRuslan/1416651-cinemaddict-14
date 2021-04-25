@@ -37,7 +37,7 @@ const createFilm = () => {
 };
 
 //Создания фильмов
-const SUMMOKS = 0; //Значение установленно временно, чтобы наставник проверил работу при отсутвии фильмов
+const SUMMOKS = 18;
 const filmsArray = new Array(SUMMOKS).fill().map(createFilm);
 
 export {filmsArray};
