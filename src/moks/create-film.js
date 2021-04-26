@@ -1,4 +1,5 @@
-import {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean, getRandomDate} from '../util.js';
+import {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean} from '../util/common.js';
+import {getRandomDate} from '../util/day.js';
 import {commentsArray} from './create-comment.js';
 
 //Создаем фильм

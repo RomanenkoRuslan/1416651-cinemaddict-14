@@ -1,4 +1,5 @@
-import {getRandomItem, getRandomInRange, getRandomDate} from '../util.js';
+import {getRandomItem, getRandomInRange} from '../util/common.js';
+import {getRandomDate} from '../util/day.js';
 
 const COMMENTS = ['Booooooooooring', 'Interesting setting and a good cast','Almost two hours? Seriously?', 'Goooood', 'It`s funny'];
 const EMOJI = ['smile', 'sleeping','puke', 'angry'];
