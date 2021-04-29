@@ -1,5 +1,5 @@
 import {filmsArray} from './moks/create-film.js';
-import {renderElement, RenderPosition} from './util.js';
+import {renderElement, RenderPosition} from './util/render.js';
 import FilmListView from './view/films-list.js';
 import ProfileView from './view/profile.js';
 import ShowMoreView from './view/show-more.js';
@@ -10,8 +10,10 @@ import MainNavigationView from './view/main-navigation.js';
 import FilmView from './view/film-card.js';
 import NoFilmMessage from './view/no-film-message.js';
 
+const KEYCODEESC = 27;
 const main = document.querySelector('.main');
 const header = document.querySelector('.header');
+const body  = document.querySelector('body');
 
 renderElement(header, new ProfileView().getElement(), RenderPosition.BEFOREEND);
 renderElement(main, new MainNavigationView(filmsArray).getElement(), RenderPosition.BEFOREEND);
@@ -26,34 +28,67 @@ if (filmsArray.length === 0) {
   renderElement(filmsListContainer, new NoFilmMessage().getElement(), RenderPosition.BEFOREEND);
 }
 
+const filmCardClickHandler = () => {
+  const PopupFilm = new PopupView(filmsArray[0]);
+
+  //Отрисовка попапа
+  const popup = main.appendChild(PopupFilm.getElement());
+
+  //Отрисовка комментарий в попапе
+  const commentsList = document.querySelector('.film-details__comments-list');
+  for (let i = 0; i < filmsArray[0].comments.length; i++) {
+    renderElement(commentsList, new CommentView(filmsArray[0].comments[i]).getElement(), RenderPosition.BEFOREEND);
+  }
+
+  body.setAttribute('class','hide-overflow');//убираем лишний скрол
+
+  //Убираем попап по клику
+  PopupFilm.clickPopupHandler(() => {
+    main.removeChild(popup);
+    body.removeAttribute('class');
+  });
+
+  //Убираем попап по ESC
+  window.addEventListener('keydown', (evt) => {
+    if (evt.keyCode === KEYCODEESC) {
+      popup.remove();
+      body.removeAttribute('class');
+    }
+  });
+};
+
 //Все фильмы
 const filmsList = document.querySelector('.films-list');
 const STEPRENDERFILM = 5;
+
 //Отрисовка всех фильмов
 for (let i = 0; i < filmsArray.slice(0, STEPRENDERFILM).length; i++) {
-  renderElement(filmsListContainer, new FilmView(filmsArray[i]).getElement(), RenderPosition.BEFOREEND);
+  const filmCard = new FilmView(filmsArray[i]);
+  filmCard.addClickHandler(filmCardClickHandler);
+  renderElement(filmsListContainer, filmCard.getElement(), RenderPosition.BEFOREEND);
 }
 
 //Отрисовка фильмов по клику
 if (filmsArray.length > STEPRENDERFILM) {
   let renderedFilmCount = STEPRENDERFILM;
+  const buttonShow = new ShowMoreView();
 
   //Отрисовка кнопки "Показать больше"
-  renderElement(filmsList, new ShowMoreView().getElement(), RenderPosition.BEFOREEND);
-  const buttonShow = document.querySelector('.films-list__show-more');
+  renderElement(filmsList, buttonShow.getElement(), RenderPosition.BEFOREEND);
 
-  buttonShow.addEventListener('click', (evt) => {
-    evt.preventDefault();
+  buttonShow.addClickButtonHandler(() => {
     filmsArray
       .slice(renderedFilmCount, renderedFilmCount + STEPRENDERFILM)
       .forEach((element) => {
-        renderElement(filmsListContainer, new FilmView(element).getElement(), RenderPosition.BEFOREEND);
+        const filmCard = new FilmView(element);
+        filmCard.addClickHandler(filmCardClickHandler);
+        renderElement(filmsListContainer, filmCard.getElement(), RenderPosition.BEFOREEND);
       });
 
     renderedFilmCount += STEPRENDERFILM;
 
     if (filmsArray.length <= renderedFilmCount) {
-      buttonShow.remove();
+      buttonShow.removeButtonHandler();
     }
   });
 }
@@ -72,7 +107,10 @@ const topRated = filmsArray.slice().sort(sortListRated);
 
 if (topRated.length > 0) {
   for (let i = 0; i < COUNTFILMSTOPRATED; i++) {
-    renderElement(filmsListContainerTopRated, new FilmView(topRated[i]).getElement(), RenderPosition.BEFOREEND);
+    const filmCard = new FilmView(topRated[i]);
+    filmCard.addClickHandler(filmCardClickHandler);
+
+    renderElement(filmsListContainerTopRated, filmCard.getElement(), RenderPosition.BEFOREEND);
   }
 }
 
@@ -85,52 +123,10 @@ const mostCommented = filmsArray.slice().sort(sortListCommented);
 
 if (mostCommented.length > 0) {
   for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
-    renderElement(filmsListContainerMostCommented, new FilmView(mostCommented[i]).getElement(), RenderPosition.BEFOREEND);
+    const filmCard = new FilmView(mostCommented[i]);
+    filmCard.addClickHandler(filmCardClickHandler);
+    renderElement(filmsListContainerMostCommented, filmCard.getElement(), RenderPosition.BEFOREEND);
   }
 }
-
-const cardTitles = document.querySelectorAll('.film-card__title');
-const cardComments = document.querySelectorAll('.film-card__comments');
-const cardPosters = document.querySelectorAll('.film-card__poster');
-
-//Создаем массив из элементов, которые открывают попап
-const elementsOpenPopup = [...cardTitles, ...cardComments, ...cardPosters];
-const body  = document.querySelector('body');
-const KEYCODEESC = 27;
-
-//Открываем попап по клику
-elementsOpenPopup.forEach((element) => {
-  element.addEventListener('click', (evt) => {
-    evt.preventDefault();
-    //Отрисовка попапа
-    const popup = main.appendChild(new PopupView(filmsArray[0]).getElement());
-
-    //Отрисовка комментарий в попапе
-    const commentsList = document.querySelector('.film-details__comments-list');
-    for (let i = 0; i < filmsArray[0].comments.length; i++) {
-      renderElement(commentsList, new CommentView(filmsArray[0].comments[i]).getElement(), RenderPosition.BEFOREEND);
-    }
-
-    body.setAttribute('class','hide-overflow');//убираем лишний скрол
-
-    const closePopupButton = document.querySelector('.film-details__close-btn');
-
-    //Убираем попап по клику
-    closePopupButton.addEventListener('click', () => {
-      main.removeChild(popup);
-      body.removeAttribute('class');
-    });
-
-    //Убираем попап по ESC
-    window.addEventListener('keydown', (evt) => {
-      if (evt.keyCode === KEYCODEESC) {
-        popup.remove();
-        body.removeAttribute('class');
-      }
-    });
-  });
-
-});
-
 
 export {filmsArray};
