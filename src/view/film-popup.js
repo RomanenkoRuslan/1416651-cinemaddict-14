@@ -1,8 +1,26 @@
 import AbstractView from './abstract.js';
 
 const createPopup = (film) => {
-  const {title, description, rating, genre, duration, date, actor, producer, screenwriter, country, ageRating, commentSum} = film;
+  const {title, description, rating, genre, duration, date, actor, producer, screenwriter, country, ageRating, commentSum, isWatch, isHistory, isFavorite} = film;
   const newFormatDate = date.format('DD MMMM YYYY');
+
+  //Добавляем активность кнопок основываясь на полученнных данных
+  let  watchClass = '';
+  let  historyClass = '';
+  let  favoriteClass = '';
+
+  if (isWatch) {
+    watchClass = 'checked="checked"';
+  }
+
+  if (isHistory) {
+    historyClass = 'checked="checked"';
+  }
+
+  if (isFavorite) {
+    favoriteClass = 'checked="checked"';
+  }
+
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -68,13 +86,13 @@ const createPopup = (film) => {
       </div>
 
       <section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${historyClass}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${watchClass}>
         <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
 
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite">
+        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${favoriteClass}>
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>
     </div>
@@ -126,6 +144,10 @@ export default class Popup extends AbstractView {
     super();
     this._film = film;
     this._popupClick = this._popupClick.bind(this);
+    this._StatusFilmWatchList = this._StatusFilmWatchList.bind(this);
+    this._StatusFilmWatched = this._StatusFilmWatched.bind(this);
+    this._StatusFilmFavorite = this._StatusFilmFavorite.bind(this);
+    this._activeClass = 'checked';
   }
 
   getTemplate () {
@@ -140,5 +162,44 @@ export default class Popup extends AbstractView {
   clickPopupHandler (callback) {
     this._callback.onclick = callback;
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupClick);
+  }
+
+  _StatusFilmWatchList(evt) {
+    this._elementClick = this.getElement().querySelector(this._classElementwatchlist);
+    evt.preventDefault();
+    this._clickChangeList();
+  }
+
+  _StatusFilmWatched(evt) {
+    this._elementClick = this.getElement().querySelector(this._classElementwatched);
+    evt.preventDefault();
+    this._clickChangeList();
+  }
+
+  _StatusFilmFavorite(evt) {
+    this._elementClick = this.getElement().querySelector(this._classElementfavorite);
+    evt.preventDefault();
+    this._clickChangeList();
+  }
+
+  _clickChangeList () {
+    // console.log(this._elementClick);
+    if (this._elementClick.hasAttribute(this._activeClass)) {
+      this._film.isWatch = false;
+      this._elementClick.removeAttribute(this._activeClass);
+
+    } else {this._film.isWatch = true; this._elementClick.setAttribute('checked', 'checked');
+    }
+    // console.log(this._elementClick.hasAttribute(this._activeClass));
+  }
+
+  clickStatusFilm () {
+    // this._callback.onclick = callback;
+    this._classElementwatchlist = '#watchlist';
+    this._classElementwatched = '#watched';
+    this._classElementfavorite = '#favorite';
+    this.getElement().querySelector(this._classElementwatchlist).addEventListener('click', this._StatusFilmWatchList);
+    this.getElement().querySelector(this._classElementwatched).addEventListener('click', this._StatusFilmWatched);
+    this.getElement().querySelector(this._classElementfavorite).addEventListener('click', this._StatusFilmFavorite);
   }
 }

@@ -1,6 +1,6 @@
 import {getRandomItem, getRandomItemNoRepeat, getRandomFractionalNumber, getRandomInRange, getBoolean} from '../util/common.js';
 import {getRandomDate} from '../util/day.js';
-import {commentsArray} from './create-comment.js';
+import {createComment} from './create-comment.js';
 
 //Создаем фильм
 
@@ -14,7 +14,9 @@ const COUNTRIES = ['Russia', 'USA', 'Chine', 'Poland', 'France', 'Spain', 'Canad
 const description = descriptionText.split('. ');
 
 const createFilm = () => {
-  const comments = commentsArray.slice(0, getRandomInRange(1, 5));
+  const commentSum = getRandomInRange(0, 5);
+  const comments = new Array(commentSum).fill().map(createComment);
+
   return {
     idFilm: getRandomInRange(1000, 5000),
     title: getRandomItem(TITLEFILMS),
@@ -33,7 +35,7 @@ const createFilm = () => {
     country: getRandomItem(COUNTRIES),
     date: getRandomDate(),
     comments,
-    commentSum: comments.length,
+    commentSum,
   };
 };
 

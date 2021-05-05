@@ -16,8 +16,4 @@ const createComment = () => {
   };
 };
 
-//Создания комментариев
-const SUMCOMMENTS = 20;
-const commentsArray = new Array(SUMCOMMENTS).fill().map(createComment);
-
-export {commentsArray};
+export {createComment};
