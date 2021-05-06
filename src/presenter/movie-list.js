@@ -81,8 +81,8 @@ export default class MovieList {
   _renderPopup (filmPopup) {
     this._filmPopup = filmPopup;
     this._PopupView = new PopupView(this._filmPopup);
-
     this._PopupView.clickStatusFilm();
+
     //Отрисовка попапа
     const popup = main.appendChild(this._PopupView.getElement());
 
@@ -105,12 +105,6 @@ export default class MovieList {
       }
     });
   }
-
-  // _changefilmStatus (film) {
-  //   //Меняем флажок в данных
-  //   film.isWatch = !film.isWatch;
-  //   // console.log(film.isWatch);
-  // }
 
   _renderAllFilm () {
     //Отрисовка всех фильмов

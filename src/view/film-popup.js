@@ -164,37 +164,38 @@ export default class Popup extends AbstractView {
     this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupClick);
   }
 
-  _StatusFilmWatchList(evt) {
+  _StatusFilmWatchList() {
     this._elementClick = this.getElement().querySelector(this._classElementwatchlist);
-    evt.preventDefault();
     this._clickChangeList();
   }
 
-  _StatusFilmWatched(evt) {
+  _StatusFilmWatched() {
     this._elementClick = this.getElement().querySelector(this._classElementwatched);
-    evt.preventDefault();
     this._clickChangeList();
   }
 
-  _StatusFilmFavorite(evt) {
+  _StatusFilmFavorite() {
     this._elementClick = this.getElement().querySelector(this._classElementfavorite);
-    evt.preventDefault();
     this._clickChangeList();
   }
 
   _clickChangeList () {
     // console.log(this._elementClick);
     if (this._elementClick.hasAttribute(this._activeClass)) {
-      this._film.isWatch = false;
       this._elementClick.removeAttribute(this._activeClass);
+      this._film.isWatch = false;
 
-    } else {this._film.isWatch = true; this._elementClick.setAttribute('checked', 'checked');
+    } else {
+      this._elementClick.setAttribute('checked', 'checked');
+      this._film.isWatch = true;
     }
+
+    // replace(this._filmnewrender, this._filmnewrender);
     // console.log(this._elementClick.hasAttribute(this._activeClass));
   }
 
   clickStatusFilm () {
-    // this._callback.onclick = callback;
+    // this._filmnewrender = filmnewrender;
     this._classElementwatchlist = '#watchlist';
     this._classElementwatched = '#watched';
     this._classElementfavorite = '#favorite';

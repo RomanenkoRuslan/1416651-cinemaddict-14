@@ -95,10 +95,11 @@ export default class Film extends AbstractView {
     if (this._elementClick.classList.contains(this._activeClass)) {
       this._elementClick.classList.remove(this._activeClass);
       this._film.isWatch = false;
-    } else {this._elementClick.classList.add(this._activeClass);
+    } else {
+      this._elementClick.classList.add(this._activeClass);
       this._film.isWatch = true;
     }
-    console.log(this._film.isWatch);
+    // console.log(this._film.isWatch);
   }
 
   clickStatusFilm () {

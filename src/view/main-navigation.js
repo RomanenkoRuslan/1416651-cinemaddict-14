@@ -27,9 +27,9 @@ const createMainNavigationTemplate = (films) => {
   return `<nav class="main-navigation">
   <div class="main-navigation__items">
     <a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-    <a href="#watchlist" class="main-navigation__item">Watchlist <span id="watchlist" class="main-navigation__item-count">${watchlist}</span></a>
-    <a href="#history" class="main-navigation__item">History <span  id="history" class="main-navigation__item-count">${history}</span></a>
-    <a href="#favorites" class="main-navigation__item">Favorites <span  id="favorites" class="main-navigation__item-count">${favorites}</span></a>
+    <a href="#watchlist" class="main-navigation__item">Watchlist <span id="watchlist-main-navigation" class="main-navigation__item-count">${watchlist}</span></a>
+    <a href="#history" class="main-navigation__item">History <span  id="history-main-navigation" class="main-navigation__item-count">${history}</span></a>
+    <a href="#favorites" class="main-navigation__item">Favorites <span  id="favorites-main-navigation" class="main-navigation__item-count">${favorites}</span></a>
   </div>
   <a href="#stats" class="main-navigation__additional">Stats</a>
 </nav>`;
