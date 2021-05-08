@@ -22,7 +22,7 @@ export default class MovieList {
     this._sortView = new SortView();
     this._filmListView = new FilmListView();
     this._noFilmMessage = new NoFilmMessage();
-    this._ShowMoreView = new ShowMoreView();
+    this._showMoreView = new ShowMoreView();
   }
 
   start (films) {
@@ -46,7 +46,7 @@ export default class MovieList {
   }
 
   _renderShowMoreButton () {
-    renderElement(this._filmsListContainer, this._ShowMoreView, RenderPosition.BEFOREEND);
+    renderElement(this._filmsListContainer, this._showMoreView, RenderPosition.BEFOREEND);
   }
 
   _clickHandlerShowMore () {
@@ -57,13 +57,13 @@ export default class MovieList {
     if (this._films.length > STEPRENDERFILM) {
       this._renderedFilmCount = STEPRENDERFILM;
 
-      this._ShowMoreView.addClickButtonHandler(() => {
-        this._ShowMoreView.removeButtonHandler();
+      this._showMoreView.addClickButtonHandler(() => {
+        this._showMoreView.removeButtonHandler();
         this._films
           .slice(this._renderedFilmCount, this._renderedFilmCount + STEPRENDERFILM)
           .forEach((element) => {
             const filmCard = new FilmView(element);
-            filmCard.addClickHandler(() => {this._renderPopup(element);});
+            filmCard.addClickHandler(() => {this._renderPopup(element, filmCard);});
             renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
             this._renderShowMoreButton();
             filmCard.clickStatusFilm();
@@ -72,7 +72,7 @@ export default class MovieList {
         this._renderedFilmCount += STEPRENDERFILM;
 
         if (this._films.length <= this._renderedFilmCount) {
-          this._ShowMoreView.removeButtonHandler();
+          this._showMoreView.removeButtonHandler();
         }
       });
     }
@@ -94,7 +94,7 @@ export default class MovieList {
     this._currentFilmCard = filmCard;
 
     this._popupView.clickPopupButtonHandler(() => {
-      this.reRenderFilm(film);
+      this._reRenderFilm(film);
     });
 
     //Отрисовка попапа
@@ -120,7 +120,7 @@ export default class MovieList {
     });
   }
 
-  reRenderFilm (film) {
+  _reRenderFilm (film) {
     const filmCard = new FilmView(film);
     filmCard.addClickHandler(() => {this._renderPopup(film, filmCard);});
     filmCard.clickStatusFilm();
@@ -150,7 +150,7 @@ export default class MovieList {
     if (topRated.length > 0) {
       for (let i = 0; i < COUNTFILMSTOPRATED; i++) {
         const filmCard = new FilmView(topRated[i]);
-        filmCard.addClickHandler(() => {this._renderPopup(topRated[i]);});
+        filmCard.addClickHandler(() => {this._renderPopup(topRated[i], filmCard);});
         renderElement(this._filmsListContainerTopRated, filmCard, RenderPosition.BEFOREEND);
         filmCard.clickStatusFilm();
       }
@@ -168,7 +168,7 @@ export default class MovieList {
     if (mostCommented.length > 0) {
       for (let i = 0; i < COUNTFILMSMOSTCOMMENTED; i++) {
         const filmCard = new FilmView(mostCommented[i]);
-        filmCard.addClickHandler(() => {this._renderPopup(mostCommented[i]);});
+        filmCard.addClickHandler(() => {this._renderPopup(mostCommented[i], filmCard);});
         renderElement(this._filmsListContainerMostCommented, filmCard, RenderPosition.BEFOREEND);
         filmCard.clickStatusFilm();
       }
