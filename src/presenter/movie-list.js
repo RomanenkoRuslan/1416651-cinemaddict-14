@@ -1,4 +1,4 @@
-import {renderElement, RenderPosition} from '../util/render.js';
+import {renderElement, RenderPosition, replace} from '../util/render.js';
 import FilmListView from '../view/films-list.js';
 import ShowMoreView from '../view/show-more.js';
 import SortView from '../view/sort.js';
@@ -82,21 +82,21 @@ export default class MovieList {
     //Отрисовка всех фильмов
     for (let i = 0; i < this._films.slice(0, STEPRENDERFILM).length; i++) {
       const filmCard = new FilmView(this._films[i]);
-      filmCard.addClickHandler(() => {this._renderPopup(this._films[i]);});
+      filmCard.addClickHandler(() => {this._renderPopup(this._films[i], filmCard);});
       this.oldFilm = renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
       filmCard.clickStatusFilm();
     }
   }
 
-  _renderPopup (film) {
+  _renderPopup (film, filmCard) {
     this._popupView = new PopupView(film);
     this._popupView.clickStatusFilm();
+    this._currentFilmCard = filmCard;
 
     this._popupView.clickPopupButtonHandler(() => {
-      // console.log('addClickHandler in _renderPopup');
-      // console.log(film.idFilm);
-      this.renderFilm(film.idFilm);
+      this.reRenderFilm(film);
     });
+
     //Отрисовка попапа
     const popup = main.appendChild(this._popupView.getElement());
 
@@ -120,15 +120,13 @@ export default class MovieList {
     });
   }
 
-  renderFilm (filmId) {
-    const idLol = `'.${filmId}'`;
-    // const idLol = `'[id='${filmId}']'`;
-    // console.log(idLol);
-    const oldFilm = this._filmsListContainer.contains(idLol);
-    // console.log(oldFilm);
-    const filmCard = new FilmView();
-    renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
-    // console.log('EEEENNNNDDDD renderFilm');
+  reRenderFilm (film) {
+    const filmCard = new FilmView(film);
+    filmCard.addClickHandler(() => {this._renderPopup(film, filmCard);});
+    filmCard.clickStatusFilm();
+
+    replace(filmCard, this._currentFilmCard);
+    this._currentFilmCard = filmCard;
   }
 
   _renderComment (film) {

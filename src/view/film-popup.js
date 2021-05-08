@@ -160,8 +160,7 @@ export default class Popup extends AbstractView {
     this._callback.onclickPopup();
   }
 
-  _popupButtonClick (evt) {
-    evt.preventDefault();
+  _popupButtonClick () {
     this._callback.onclickButton();
   }
 
