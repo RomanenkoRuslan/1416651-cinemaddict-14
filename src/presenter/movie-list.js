@@ -78,21 +78,35 @@ export default class MovieList {
     }
   }
 
-  _renderPopup (filmPopup) {
-    this._filmPopup = filmPopup;
-    this._PopupView = new PopupView(this._filmPopup);
-    this._PopupView.clickStatusFilm();
+  _renderAllFilm () {
+    //Отрисовка всех фильмов
+    for (let i = 0; i < this._films.slice(0, STEPRENDERFILM).length; i++) {
+      const filmCard = new FilmView(this._films[i]);
+      filmCard.addClickHandler(() => {this._renderPopup(this._films[i]);});
+      this.oldFilm = renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
+      filmCard.clickStatusFilm();
+    }
+  }
 
+  _renderPopup (film) {
+    this._popupView = new PopupView(film);
+    this._popupView.clickStatusFilm();
+
+    this._popupView.clickPopupButtonHandler(() => {
+      // console.log('addClickHandler in _renderPopup');
+      // console.log(film.idFilm);
+      this.renderFilm(film.idFilm);
+    });
     //Отрисовка попапа
-    const popup = main.appendChild(this._PopupView.getElement());
+    const popup = main.appendChild(this._popupView.getElement());
 
     //Отрисовка комментарий в попапе
-    this._renderComment(this._filmPopup);
+    this._renderComment(film);
 
     body.setAttribute('class','hide-overflow');//убираем лишний скрол
 
     //Убираем попап по клику
-    this._PopupView .clickPopupHandler(() => {
+    this._popupView.clickPopupHandler(() => {
       main.removeChild(popup);
       body.removeAttribute('class');
     });
@@ -106,14 +120,15 @@ export default class MovieList {
     });
   }
 
-  _renderAllFilm () {
-    //Отрисовка всех фильмов
-    for (let i = 0; i < this._films.slice(0, STEPRENDERFILM).length; i++) {
-      const filmCard = new FilmView(this._films[i]);
-      filmCard.addClickHandler(() => {this._renderPopup(this._films[i]);});
-      renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
-      filmCard.clickStatusFilm();
-    }
+  renderFilm (filmId) {
+    const idLol = `'.${filmId}'`;
+    // const idLol = `'[id='${filmId}']'`;
+    // console.log(idLol);
+    const oldFilm = this._filmsListContainer.contains(idLol);
+    // console.log(oldFilm);
+    const filmCard = new FilmView();
+    renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
+    // console.log('EEEENNNNDDDD renderFilm');
   }
 
   _renderComment (film) {
