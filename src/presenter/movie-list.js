@@ -33,6 +33,7 @@ export default class MovieList {
     this._films = this._defaultFilms.slice();
     this._filmListView = new FilmListView();
     this._renderSortView();
+    this._renderedFilmCount = Math.min(STEPRENDERFILM, this._films.length);
     renderElement(this._container, this._filmListView, RenderPosition.BEFOREEND);
 
     this._filmsListContainer = document.querySelector('.films-list__container--all-movies');
@@ -56,17 +57,12 @@ export default class MovieList {
 
   //Отрисовка нового отсортировано списка по клику
   _handleSortTypeChange (sortType) {
-    const mainFilmList = document.querySelector('.films-list__container--all-movies');
     if (this._currentSortType !== sortType) {
-      mainFilmList.innerHTML = '';
+      this._filmsListContainer.innerHTML = '';
       this._films = this._getSortedFilms(sortType);
 
-      for (let i = 0; i < this._films.length ; i++) {
-        const filmCard = new FilmView(this._films[i]);
-        filmCard.addClickHandler(() => {this._renderPopup(this._films[i], filmCard);});
-        renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
-        filmCard.clickStatusFilm();
-      }
+      this._renderAllFilm();
+      this._clickHandlerShowMore();
 
       this._currentSortType = sortType;
     }
@@ -109,6 +105,7 @@ export default class MovieList {
 
         if (this._films.length <= this._renderedFilmCount) {
           this._showMoreView.removeButtonHandler();
+          this._renderedFilmCount = STEPRENDERFILM;
         }
       });
     }
@@ -116,7 +113,7 @@ export default class MovieList {
 
   _renderAllFilm () {
     //Отрисовка всех фильмов
-    for (let i = 0; i < this._films.slice(0, STEPRENDERFILM).length; i++) {
+    for (let i = 0; i < this._films.slice(0, this._renderedFilmCount).length; i++) {
       const filmCard = new FilmView(this._films[i]);
       filmCard.addClickHandler(() => {this._renderPopup(this._films[i], filmCard);});
       renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
