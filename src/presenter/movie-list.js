@@ -6,6 +6,8 @@ import CommentView from '../view/comment.js';
 import PopupView from '../view/film-popup.js';
 import FilmView from '../view/film-card.js';
 import NoFilmMessage from '../view/no-film-message.js';
+import {sortListRated, sortListCommented, sortListDate} from '../util/sort-rules.js';
+import {SortType} from '../const';
 
 const KEYCODEESC = 27;
 const STEPRENDERFILM = 5;
@@ -18,15 +20,18 @@ const main = document.querySelector('.main');
 export default class MovieList {
   constructor (container) {
     this._container = container;
+    this._currentSortType = SortType.DEFAULT;
 
     this._sortView = new SortView();
-    this._filmListView = new FilmListView();
     this._noFilmMessage = new NoFilmMessage();
     this._showMoreView = new ShowMoreView();
+    this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
   start (films) {
-    this._films = films.slice();
+    this._defaultFilms = films;
+    this._films = this._defaultFilms.slice();
+    this._filmListView = new FilmListView();
     this._renderSortView();
     renderElement(this._container, this._filmListView, RenderPosition.BEFOREEND);
 
@@ -37,8 +42,39 @@ export default class MovieList {
     this._renderMovieBoard();
   }
 
+  _getSortedFilms(sortType) {
+    switch(sortType) {
+      case SortType.DATE:
+        return this._films.sort(sortListDate); //Сортировка по Дате
+      case SortType.RATING:
+        return this._films.sort(sortListRated); //Сортировка по Рейтингу
+      case SortType.DEFAULT:
+        this._films = this._defaultFilms;
+        return this._films;
+    }
+  }
+
+  //Отрисовка нового отсортировано списка по клику
+  _handleSortTypeChange (sortType) {
+    const mainFilmList = document.querySelector('.films-list__container--all-movies');
+    if (this._currentSortType !== sortType) {
+      mainFilmList.innerHTML = '';
+      this._films = this._getSortedFilms(sortType);
+
+      for (let i = 0; i < this._films.length ; i++) {
+        const filmCard = new FilmView(this._films[i]);
+        filmCard.addClickHandler(() => {this._renderPopup(this._films[i], filmCard);});
+        renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
+        filmCard.clickStatusFilm();
+      }
+
+      this._currentSortType = sortType;
+    }
+  }
+
   _renderSortView () {
     renderElement(this._container, this._sortView, RenderPosition.BEFOREEND);
+    this._sortView.addClickHandler(this._handleSortTypeChange);
   }
 
   _renderNoFilmMessage () {
@@ -83,7 +119,7 @@ export default class MovieList {
     for (let i = 0; i < this._films.slice(0, STEPRENDERFILM).length; i++) {
       const filmCard = new FilmView(this._films[i]);
       filmCard.addClickHandler(() => {this._renderPopup(this._films[i], filmCard);});
-      this.oldFilm = renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
+      renderElement(this._filmsListContainer, filmCard, RenderPosition.BEFOREEND);
       filmCard.clickStatusFilm();
     }
   }
@@ -138,12 +174,6 @@ export default class MovieList {
   }
 
   _renderTopRated () {
-    //Отрисовка топ рейтинга
-    //Сортировка по рейтингу от большего к меньшему
-    const sortListRated = (a, b) => {
-      return b.rating - a.rating;
-    };
-
     //Сортировка по рейтингу
     const topRated = this._films.slice().sort(sortListRated);
 
@@ -158,11 +188,6 @@ export default class MovieList {
   }
 
   _renderMostCommented () {
-    //Отрисовка самый комментируемый
-    //Сортировка по колличеству комментарий от большего к меньшему
-    const sortListCommented = (a, b) => {
-      return b.commentSum - a.commentSum;
-    };
     const mostCommented = this._films.slice().sort(sortListCommented);
 
     if (mostCommented.length > 0) {
