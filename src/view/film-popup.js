@@ -1,6 +1,5 @@
 import SmartView from './smart.js';
 
-
 //Создаем комментарии
 const createComment = (comment) => {
   const {textComment, emoji, authorComment, dateComment} = comment;
