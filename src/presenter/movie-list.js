@@ -1,8 +1,7 @@
-import {renderElement, RenderPosition, replace} from '../util/render.js';
+import {renderElement, RenderPosition, replace, remove} from '../util/render.js';
 import FilmListView from '../view/films-list.js';
 import ShowMoreView from '../view/show-more.js';
 import SortView from '../view/sort.js';
-import CommentView from '../view/comment.js';
 import PopupView from '../view/film-popup.js';
 import FilmView from '../view/film-card.js';
 import NoFilmMessage from '../view/no-film-message.js';
@@ -123,7 +122,6 @@ export default class MovieList {
 
   _renderPopup (film, filmCard) {
     this._popupView = new PopupView(film);
-    this._popupView.clickStatusFilm();
     this._currentFilmCard = filmCard;
 
     this._popupView.clickPopupButtonHandler(() => {
@@ -131,23 +129,20 @@ export default class MovieList {
     });
 
     //Отрисовка попапа
-    const popup = main.appendChild(this._popupView.getElement());
-
-    //Отрисовка комментарий в попапе
-    this._renderComment(film);
+    main.appendChild(this._popupView.getElement());
 
     body.setAttribute('class','hide-overflow');//убираем лишний скрол
 
     //Убираем попап по клику
     this._popupView.clickPopupHandler(() => {
-      main.removeChild(popup);
+      remove(this._popupView);
       body.removeAttribute('class');
     });
 
     //Убираем попап по ESC
     window.addEventListener('keydown', (evt) => {
       if (evt.keyCode === KEYCODEESC) {
-        popup.remove();
+        remove(this._popupView);
         body.removeAttribute('class');
       }
     });
@@ -160,14 +155,6 @@ export default class MovieList {
 
     replace(filmCard, this._currentFilmCard);
     this._currentFilmCard = filmCard;
-  }
-
-  _renderComment (film) {
-    //Отрисовка комментарий в попапе
-    const commentsList = document.querySelector('.film-details__comments-list');
-    for (let j = 0; j < film.comments.length; j++) {
-      renderElement(commentsList, new CommentView(film.comments[j]), RenderPosition.BEFOREEND);
-    }
   }
 
   _renderTopRated () {

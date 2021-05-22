@@ -8,6 +8,11 @@ const createFilmTemplate = (film) => {
 
   const {title, description, rating, genre, date, duration, commentSum, isWatch, isHistory, isFavorite, idFilm} = film;
 
+  //Адаптация данных с сервера
+  const MINUTEINHOUR = 60;
+  const hourDuration = Math.floor(duration / MINUTEINHOUR); //Получаем часы
+  const minuteDuration = duration - (hourDuration * MINUTEINHOUR); //Получаем минуты
+
   const year = date.format('YYYY');
   //Добавляем активность кнопок основываясь на полученнных данных
   let  watchClass = '';
@@ -31,7 +36,7 @@ const createFilmTemplate = (film) => {
   <p class="film-card__rating">${rating}</p>
   <p class="film-card__info">
     <span class="film-card__year">${year}</span>
-    <span class="film-card__duration">${duration}</span>
+    <span class="film-card__duration">${hourDuration}h ${minuteDuration}m</span>
     <span class="film-card__genre">${genre}</span>
   </p>
   <img src="./images/posters/the-dance-of-life.jpg" alt="" class="film-card__poster">

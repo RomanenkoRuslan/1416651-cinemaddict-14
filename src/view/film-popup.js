@@ -1,6 +1,27 @@
-import AbstractView from './abstract.js';
+import SmartView from './smart.js';
 
-const createPopup = (film) => {
+
+//Создаем комментарии
+const createComment = (comment) => {
+  const {textComment, emoji, authorComment, dateComment} = comment;
+  const newDateFormat = dateComment.format('YYYY/MM/DD HH:mm');
+
+  return `<li class="film-details__comment">
+  <span class="film-details__comment-emoji">
+    <img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji-smile">
+  </span>
+  <div>
+    <p class="film-details__comment-text">${textComment}</p>
+    <p class="film-details__comment-info">
+      <span class="film-details__comment-author">${authorComment}</span>
+      <span class="film-details__comment-day">${newDateFormat}</span>
+      <button class="film-details__comment-delete">Delete</button>
+    </p>
+  </div>
+</li>`;
+};
+
+const createPopup = (film, data) => {
   const {title, description, rating, genre, duration, date, actor, producer, screenwriter, country, ageRating, commentSum, isWatch, isHistory, isFavorite} = film;
   const newFormatDate = date.format('DD MMMM YYYY');
 
@@ -21,6 +42,8 @@ const createPopup = (film) => {
     favoriteClass = 'checked="checked"';
   }
 
+  //Создаем строку из комментарий
+  const commentsTemplate = film.comments.map((comment) => createComment(comment)).join('');
 
   return `<section class="film-details">
   <form class="film-details__inner" action="" method="get">
@@ -102,10 +125,13 @@ const createPopup = (film) => {
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${commentSum}</span></h3>
 
         <ul class="film-details__comments-list">
+          ${commentsTemplate}
         </ul>
 
         <div class="film-details__new-comment">
-          <div class="film-details__add-emoji-label"></div>
+          <div class="film-details__add-emoji-label">
+            ${data.emoji != null ? `<img src="./images/emoji/${data.emoji}.png" width="55" height="55" alt="emoji">` : ''}
+          </div>
 
           <label class="film-details__comment-label">
             <textarea class="film-details__comment-input" placeholder="Select reaction below and write comment here" name="comment"></textarea>
@@ -114,22 +140,22 @@ const createPopup = (film) => {
           <div class="film-details__emoji-list">
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-smile" value="smile">
             <label class="film-details__emoji-label" for="emoji-smile">
-              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/smile.png" width="30" height="30" alt="emoji"  class="smile">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-sleeping" value="sleeping">
             <label class="film-details__emoji-label" for="emoji-sleeping">
-              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/sleeping.png" width="30" height="30" alt="emoji"  class="sleeping">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-puke" value="puke">
             <label class="film-details__emoji-label" for="emoji-puke">
-              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/puke.png" width="30" height="30" alt="emoji"  class="puke">
             </label>
 
             <input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-angry" value="angry">
             <label class="film-details__emoji-label" for="emoji-angry">
-              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji">
+              <img src="./images/emoji/angry.png" width="30" height="30" alt="emoji" class="angry">
             </label>
           </div>
         </div>
@@ -139,9 +165,13 @@ const createPopup = (film) => {
 </section>`;
 };
 
-export default class Popup extends AbstractView {
+export default class Popup extends SmartView {
   constructor (film) {
     super();
+    this._data = {
+      emoji: null,
+    };
+
     this._film = film;
     this._popupClick = this._popupClick.bind(this);
     this._popupButtonClick = this._popupButtonClick.bind(this);
@@ -149,10 +179,40 @@ export default class Popup extends AbstractView {
     this._onFilmWatchedListClick = this._onFilmWatchedListClick.bind(this);
     this._onFilmFavoriteListClick = this._onFilmFavoriteListClick.bind(this);
     this._activeClass = 'checked';
+    this._initEmojiClickHandler();
+    this._initClickStatusHandlers();
   }
 
   getTemplate () {
-    return createPopup(this._film );
+    return createPopup(this._film, this._data);
+  }
+
+  _initEmojiClickHandler() {
+    const emojiElements = this.getElement().querySelectorAll('.film-details__emoji-label');
+
+    //Навешиваем изменение Emoji
+    emojiElements.forEach((element) => {
+      element.addEventListener('click', (evt) => {
+        if (evt.target.tagName !== 'IMG') {
+          return;
+        }
+
+        //Изменяем попап
+        this.updateData({
+          emoji: evt.target.className,
+        });
+      });
+    });
+  }
+
+  //Навешием все нужные слушатели
+  restoreHandlers() {
+    this._initEmojiClickHandler();
+    this.getElement().querySelector(this._classElementwatchlist).addEventListener('click', this._popupButtonClick);
+    this.getElement().querySelector(this._classElementwatched).addEventListener('click', this._popupButtonClick);
+    this.getElement().querySelector(this._classElementfavorite).addEventListener('click', this._popupButtonClick);
+    this.getElement().querySelector('.film-details__close-btn').addEventListener('click', this._popupClick);
+    this._initClickStatusHandlers();
   }
 
   _popupClick (evt) {
@@ -191,7 +251,7 @@ export default class Popup extends AbstractView {
     this._film.isFavorite = this._elementClick.checked;
   }
 
-  clickStatusFilm () {
+  _initClickStatusHandlers() {
     this._classElementwatchlist = '#watchlist';
     this._classElementwatched = '#watched';
     this._classElementfavorite = '#favorite';
