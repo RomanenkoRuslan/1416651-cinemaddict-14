@@ -29,7 +29,7 @@ const createFilm = () => {
     producer: getRandomItem(PRODUCERS),
     screenwriter: getRandomItemNoRepeat(SCREENWRITERS),
     actor: getRandomItemNoRepeat(ACTORS),
-    duration: `${getRandomInRange(0, 3)}h ${getRandomInRange(1, 60)}m`,
+    duration: getRandomInRange(20, 240),
     genre: getRandomItem(GENRES),
     ageRating: `${getRandomInRange(0, 21)}+`,
     country: getRandomItem(COUNTRIES),
